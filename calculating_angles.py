@@ -35,10 +35,13 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             # Calculate angle between the 3 landmarks
             angle = angles.calculate_angle(shoulder, elbow, wrist)
 
-            # Visualize
+            # Visualize Angle on screen
             cv.putText(image, str(angle), 
                        tuple(np.multiply(elbow, [640, 480],).astype(int)),
                        cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv.LINE_AAA)
+            # ^ use cv2 putText method: pass in image, angle by converting to string, determine where positioning is (multiply elbow coordinate and dimensions of webcam) (convert to int then tuple, tuple holds x and y coordinate based on the webcam video)
+            # font type, font size, colour of font (white), line width, line type
+
 
         except:
             pass # pass if no detections or error / step out of loop
@@ -64,7 +67,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
     cap.release() # release the video feed
     cv.destroyAllWindows() # close all the windows
 
-### ----- TESTING ------
+### ----- TESTING ------ ###
 
 ## - operators to find landmarks and landmarks values
 
