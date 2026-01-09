@@ -1,7 +1,6 @@
 import mediapipe as mp
 import numpy as np
 import cv2 as cv
-import angles
 
 mp_drawing = mp.solutions.drawing_utils # drawing utilites / visualizing poses
 mp_pose = mp.solutions.pose # grabbing the pose estimation model
@@ -26,20 +25,6 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         # Extract landmarks (connection points)
         try:
             landmarks = results.pose_landmarks.landmark # variable to hold landmarks, get landmarks with method
-            
-            # Get coordinates (specifically x and y coords)
-            shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y] # store x and y coordinate of the left shoulder in a list
-            elbow = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x, landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y] # store x and y coordinate of the elbow shoulder in a list
-            wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x, landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y] # store x and y coordinate of the wrist shoulder in a list
-        
-            # Calculate angle between the 3 landmarks
-            angle = angles.calculate_angle(shoulder, elbow, wrist)
-
-            # Visualize
-            cv.putText(image, str(angle), 
-                       tuple(np.multiply(elbow, [640, 480],).astype(int)),
-                       cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv.LINE_AAA)
-
         except:
             pass # pass if no detections or error / step out of loop
 
@@ -64,8 +49,6 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
     cap.release() # release the video feed
     cv.destroyAllWindows() # close all the windows
 
-### ----- TESTING ------
-
 ## - operators to find landmarks and landmarks values
 
 len(landmarks) # prints 33 since there are 33 landmarks in the human body
@@ -77,10 +60,3 @@ print(mp_pose.PoseLandmark.NOSE.value) # prints index 0
 
 landmarks[mp_pose.PoseLandmark.NOSE.value] # same as below
 landmarks[0] # prints the coordinates (x, y, z) and visibility value
-
-shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y] # store x and y coordinate of the left shoulder in a list
-elbow = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x, landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y] # store x and y coordinate of the elbow shoulder in a list
-wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x, landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y] # store x and y coordinate of the wrist shoulder in a list
-
-print(angles.calculate_angle(shoulder, elbow, wrist)) # calculate the angle between shoulder, elbow and wrist by passing in the x and y coordinates of the 3 landmarks in the angles file
-
