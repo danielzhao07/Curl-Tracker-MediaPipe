@@ -22,12 +22,18 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         image.flags.writeable = True # set writeable back to true
         image = cv.cvtColor(image, cv.COLOR_RGB2BGR) # re-render back to BGR, since opencv reads BGR
 
-        print(results)
-
         # Render detections
+        # draw detections to image
+        # - use drawing utilities, pass the image, pass the result landmarks and pass the pose connections (which landmarks are connected to which)
+        mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                  mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2),
+                                  mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2)
+                                  )
+                                # ^^ added 2 drawing specs, specifications for our drawing components (landmarks)
+                                # first spec is colour dots, second spec is the connections - coloured lines
         
-
-        cv.imshow('Mediapipe Feed', frame) # pop up window to visualize the image (frame)
+        # display image with new landmarks drawn
+        cv.imshow('Mediapipe Feed', image) # pop up window to visualize the image (frame)
 
         if cv.waitKey(10) & 0xFF == ord('q'): # break loop if window is closed or q is pressed
             break
